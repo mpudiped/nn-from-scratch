@@ -1,6 +1,6 @@
 #ifndef GREET_H
 
 #define GREET_H
-void helloWorld();
+void hello_world(void);
 
 #endif

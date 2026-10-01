@@ -1,5 +1,6 @@
+#include "greet.h"
 #include <stdio.h>
 
-void helloWorld() {
+void hello_world(void) {
     printf("Hello World.\n");
 }
