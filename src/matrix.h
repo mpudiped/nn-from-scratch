@@ -55,5 +55,34 @@ void free_matrix(Matrix* m);
  */
 int get_index(const Matrix* m, int row, int col);
 
+/*
+ * Prints the matrix to standard output, one row per line.
+ *
+ * m must not be NULL and must not be empty. Anything else is a bug in
+ * the calling code and stops the program with an assertion.
+ *
+ * Each element is printed with %g and followed by a space. Each row
+ * ends with a newline. Intended for debugging and for small matrices;
+ * the columns are not aligned.
+ *
+ * Does not change the matrix.
+ */
 void print_matrix(const Matrix* m);
+
+/*
+ * Copies count values from arr into the matrix, in row-major order.
+ *
+ * m must not be NULL and must not be empty. arr must not be NULL and
+ * must hold at least count floats. count must equal m->rows * m->cols.
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, the first m->cols values of arr are row 0, the next
+ * m->cols values are row 1, and so on. Every element of the matrix is
+ * overwritten.
+ *
+ * The values are copied. The matrix does not keep a reference to arr,
+ * so arr can be changed or released after the call.
+ */
+void fill_mat_from_arr(Matrix* m, const float* arr, int count);
 #endif

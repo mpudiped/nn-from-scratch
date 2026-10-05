@@ -26,7 +26,8 @@ void free_matrix(Matrix* m) {
 }
 
 int get_index(const Matrix* m, int row, int col) {
-    assert(m != NULL && row >= 0 && row < m->rows && col >= 0 && col < m->cols);
+    assert(m != NULL);
+    assert(row >= 0 && row < m->rows && col >= 0 && col < m->cols);
     return row * m->cols + col;
 }
 
@@ -37,5 +38,14 @@ void print_matrix(const Matrix* m) {
             printf("%g ", m->mat[get_index(m, i, j)]);
         }
         printf("\n");
+    }
+}
+
+void fill_mat_from_arr(Matrix* m, const float* arr, int count) {
+    assert(m != NULL && m->mat != NULL);
+    assert(arr != NULL);
+    assert(count == m->rows * m->cols);
+    for (int i = 0; i < count; i++) {
+        m->mat[i] = arr[i];
     }
 }
