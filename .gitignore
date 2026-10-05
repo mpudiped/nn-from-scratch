@@ -1,3 +1,5 @@
 build/
 data/
 *.dSYM
+.vscode
+Neural_Network_in_c_Build_plan.md

@@ -20,7 +20,7 @@ runs a matrix multiply.
 
 ## Roadmap
 
-- [ ] **Phase 0: Build setup.** Makefile with debug (sanitizers) and release
+- [x] **Phase 0: Build setup.** Makefile with debug (sanitizers) and release
       modes, automatic header dependencies, and a test target.
 - [ ] **Phase 1: Matrix library.** Every operation tested against
       hand-computed answers, including non-square shapes.
