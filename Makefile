@@ -10,7 +10,7 @@ CFLAGS += -fsanitize=address,undefined -fno-sanitize-recover=undefined -g -O0
 LDFLAGS += -fsanitize=address,undefined
 BUILD_DIR = build/debug
 else ifeq ($(MODE),release)
-CFLAGS += -O2
+CFLAGS += -DNDEBUG -O2
 BUILD_DIR = build/release
 else
 $(error ERROR: MODE must be debug or release, not $(MODE))

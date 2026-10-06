@@ -25,7 +25,7 @@ int main(void) {
 
     // Part 2 of tests
     Matrix t2 = init_matrix(2, 3);
-    const float fill[6] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
+    const float fill[] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
     int count = sizeof(fill)/sizeof(fill[0]);
     fill_mat_from_arr(&t2, fill, count);
 
@@ -45,7 +45,25 @@ int main(void) {
     counter++;
     free_matrix(&t2);
     free_matrix(&t3);
-    
+
+    // Mat Mul Tests
+    Matrix A = init_matrix(2, 3);
+    const float fill_A[] = {1, -2, 3, 4, 0, -1};
+    fill_mat_from_arr(&A, fill_A, sizeof(fill_A)/sizeof(fill_A[0]));
+    Matrix B = init_matrix(3, 4);
+    const float fill_B[] = {2, 1, 0, -1, 3, -2, 1, 4, 0, 5, -3, 2};
+    fill_mat_from_arr(&B, fill_B, sizeof(fill_B)/sizeof(fill_B[0]));
+    Matrix C = init_matrix(2, 4);
+    mat_mult(&C, &A, &B);
+    Matrix expected = init_matrix(2, 4);
+    const float expected_vals[] = {-4, 20, -11, -3, 8, -1, 3, -6};
+    fill_mat_from_arr(&expected, expected_vals, sizeof(expected_vals)/sizeof(expected_vals[0]));
+    fail_counter += compare_matrix(&C, &expected, tolerance, "test mat mult");
+    counter++;
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&C);
+
     printf("%d tests, %d failed\n", counter, fail_counter);
     return fail_counter > 0;
 }

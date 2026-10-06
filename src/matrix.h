@@ -85,4 +85,25 @@ void print_matrix(const Matrix* m);
  * so arr can be changed or released after the call.
  */
 void fill_mat_from_arr(Matrix* m, const float* arr, int count);
+
+/*
+ * Computes the matrix product C = A * B.
+ *
+ * A, B and C must not be NULL, and none of them may be empty. C must
+ * not share its memory with A or with B.
+ *
+ * The shapes must agree: A->cols must equal B->rows, C->rows must equal
+ * A->rows, and C->cols must equal B->cols. So if A is m x k and B is
+ * k x n, C must already be an m x n matrix.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of C has been overwritten:
+ * C[i][j] is the sum over k of A[i][k] * B[k][j].
+ * C does not need to be zeroed first.
+ *
+ * A and B are not changed. No memory is allocated.
+ */
+void mat_mult(Matrix* C, const Matrix* A, const Matrix* B);
 #endif

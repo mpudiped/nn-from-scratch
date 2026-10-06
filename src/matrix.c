@@ -49,3 +49,21 @@ void fill_mat_from_arr(Matrix* m, const float* arr, int count) {
         m->mat[i] = arr[i];
     }
 }
+
+void mat_mult(Matrix* C, const Matrix* A, const Matrix* B) {
+    assert(A != NULL && B != NULL && C != NULL);
+    assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);
+    assert(C->mat != A->mat && C->mat != B->mat);
+    assert(A->cols == B->rows);
+    assert(C->rows == A->rows);
+    assert(C->cols == B->cols);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < B->cols; j++) {
+            float curr = 0.0f;
+            for (int k = 0; k < A->cols; k++) {
+                curr += A->mat[i * A->cols + k] * B->mat[j + k * B->cols];
+            }
+            C->mat[i * C->cols + j] = curr;
+        }
+    }
+}
