@@ -106,4 +106,6 @@ void fill_mat_from_arr(Matrix* m, const float* arr, int count);
  * A and B are not changed. No memory is allocated.
  */
 void mat_mult(Matrix* C, const Matrix* A, const Matrix* B);
+
+void mat_transpose(Matrix* transposed, const Matrix* A);
 #endif

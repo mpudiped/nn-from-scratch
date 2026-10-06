@@ -67,3 +67,15 @@ void mat_mult(Matrix* C, const Matrix* A, const Matrix* B) {
         }
     }
 }
+
+void mat_transpose(Matrix* transposed, const Matrix* A) {
+    assert(transposed != NULL && A != NULL);
+    assert(transposed->mat != NULL && A->mat != NULL);
+    assert(transposed->mat != A->mat);
+    assert(transposed->rows == A->cols && transposed->cols == A->rows);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < A->cols; j++) {
+            transposed->mat[j * transposed->cols + i] = A->mat[i * A->cols + j];
+        }
+    }
+}

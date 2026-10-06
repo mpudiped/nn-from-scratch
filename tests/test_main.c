@@ -64,6 +64,28 @@ int main(void) {
     free_matrix(&B);
     free_matrix(&C);
 
+    // Test transpose
+    Matrix og = init_matrix(2, 3);
+    fill_mat_from_arr(&og, fill, sizeof(fill)/sizeof(fill[0]));
+    Matrix og_trans_expected = init_matrix(3, 2);
+    const float og_trans_arr[] = {1, 4, 2, 5, 3 ,6};
+    fill_mat_from_arr(&og_trans_expected, og_trans_arr, sizeof(og_trans_arr)/sizeof(og_trans_arr[0]));
+    
+    Matrix og_trans = init_matrix(3, 2);
+    mat_transpose(&og_trans, &og);
+    fail_counter += compare_matrix(&og_trans, &og_trans_expected, tolerance, "test transpose");
+    counter++;
+
+    Matrix double_trans = init_matrix(2, 3);
+
+    mat_transpose(&double_trans, &og_trans);
+    fail_counter += compare_matrix(&double_trans, &og, tolerance, "transpose back");
+    counter++;
+    free_matrix(&og);
+    free_matrix(&og_trans_expected);
+    free_matrix(&og_trans);
+    free_matrix(&double_trans);
+    
     printf("%d tests, %d failed\n", counter, fail_counter);
     return fail_counter > 0;
 }
