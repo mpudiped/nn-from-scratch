@@ -79,3 +79,39 @@ void mat_transpose(Matrix* transposed, const Matrix* A) {
         }
     }
 }
+
+void mat_mult_at_b(Matrix* C, const Matrix* A, const Matrix* B) {
+    assert(A != NULL && B != NULL && C != NULL);
+    assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);
+    assert(C->mat != A->mat && C->mat != B->mat);
+    assert(A->rows == B->rows);
+    assert(C->rows == A->cols);
+    assert(C->cols == B->cols);
+    for (int i = 0; i < A->cols; i++) {
+        for (int j = 0; j < B->cols; j++) {
+            float curr = 0.0f;
+            for (int k = 0; k < A->rows; k++) {
+                curr += A->mat[k * A->cols + i] * B->mat[j + k * B->cols];
+            }
+            C->mat[i * C->cols + j] = curr;
+        }
+    }
+}
+
+void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B) {
+    assert(A != NULL && B != NULL && C != NULL);
+    assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);
+    assert(C->mat != A->mat && C->mat != B->mat);
+    assert(A->cols == B->cols);
+    assert(C->rows == A->rows);
+    assert(C->cols == B->rows);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < B->rows; j++) {
+            float curr = 0.0f;
+            for (int k = 0; k < A->cols; k++) {
+                curr += A->mat[i * A->cols + k] * B->mat[k + j * B->cols];
+            }
+            C->mat[i * C->cols + j] = curr;
+        }
+    }
+}

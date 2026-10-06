@@ -107,5 +107,66 @@ void fill_mat_from_arr(Matrix* m, const float* arr, int count);
  */
 void mat_mult(Matrix* C, const Matrix* A, const Matrix* B);
 
+/*
+ * Writes the transpose of A into transposed.
+ *
+ * A and transposed must not be NULL, and neither may be empty.
+ * transposed must not share its memory with A.
+ *
+ * The shapes must agree: transposed->rows must equal A->cols, and
+ * transposed->cols must equal A->rows. So if A is m x n, transposed
+ * must already be an n x m matrix.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of transposed has been overwritten:
+ * transposed[j][i] is A[i][j]. The rows of A become the columns of
+ * transposed.
+ *
+ * A is not changed. No memory is allocated.
+ */
 void mat_transpose(Matrix* transposed, const Matrix* A);
+
+/*
+ * Computes C = (A transposed) * B, without building the transpose of A.
+ *
+ * A, B and C must not be NULL, and none of them may be empty. C must
+ * not share its memory with A or with B.
+ *
+ * The shapes must agree: A->rows must equal B->rows, C->rows must equal
+ * A->cols, and C->cols must equal B->cols. So if A is k x m and B is
+ * k x n, C must already be an m x n matrix.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of C has been overwritten:
+ * C[i][j] is the sum over k of A[k][i] * B[k][j].
+ * C does not need to be zeroed first.
+ *
+ * A and B are not changed. No memory is allocated.
+ */
+void mat_mult_at_b(Matrix* C, const Matrix* A, const Matrix* B);
+
+/*
+ * Computes C = A * (B transposed), without building the transpose of B.
+ *
+ * A, B and C must not be NULL, and none of them may be empty. C must
+ * not share its memory with A or with B.
+ *
+ * The shapes must agree: A->cols must equal B->cols, C->rows must equal
+ * A->rows, and C->cols must equal B->rows. So if A is m x k and B is
+ * n x k, C must already be an m x n matrix.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of C has been overwritten:
+ * C[i][j] is the sum over k of A[i][k] * B[j][k].
+ * C does not need to be zeroed first.
+ *
+ * A and B are not changed. No memory is allocated.
+ */
+void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B);
 #endif

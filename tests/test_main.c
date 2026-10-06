@@ -63,6 +63,7 @@ int main(void) {
     free_matrix(&A);
     free_matrix(&B);
     free_matrix(&C);
+    free_matrix(&expected);
 
     // Test transpose
     Matrix og = init_matrix(2, 3);
@@ -85,7 +86,47 @@ int main(void) {
     free_matrix(&og_trans_expected);
     free_matrix(&og_trans);
     free_matrix(&double_trans);
+
+    // Test Mat Mult with Transpose
+    const float fill8[] = {1, 2, 3, 4, 5, 6, 7, 8};
+    Matrix mat_og1 = init_matrix(2, 3);
+    fill_mat_from_arr(&mat_og1, fill, sizeof(fill)/sizeof(fill[0]));
+    Matrix mat_og2 = init_matrix(2, 4);
+    fill_mat_from_arr(&mat_og2, fill8, sizeof(fill8)/sizeof(fill8[0]));
+    Matrix mat_trans1 = init_matrix(3, 2);
+    mat_transpose(&mat_trans1, &mat_og1);
+    Matrix at_expected = init_matrix(3, 4);
+    mat_mult(&at_expected, &mat_trans1, &mat_og2);
     
+    Matrix trans_at = init_matrix(3, 4);
+    mat_mult_at_b(&trans_at, &mat_og1, &mat_og2);
+    fail_counter += compare_matrix(&trans_at, &at_expected, tolerance, "mat mult at");
+    counter++;  
+    free_matrix(&mat_og2);
+    free_matrix(&mat_trans1);
+    free_matrix(&trans_at);
+    free_matrix(&at_expected);
+
+    const float fill12[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    Matrix mat_og3 = init_matrix(4, 3);
+    fill_mat_from_arr(&mat_og3, fill12, sizeof(fill12)/sizeof(fill12[0]));
+    Matrix mat_trans3 = init_matrix(3, 4);
+    mat_transpose(&mat_trans3, &mat_og3);
+    Matrix bt_expected = init_matrix(2, 4);
+    mat_mult(&bt_expected, &mat_og1, &mat_trans3);
+
+    Matrix trans_bt = init_matrix(2, 4);
+    mat_mult_a_bt(&trans_bt, &mat_og1, &mat_og3);
+    
+    fail_counter += compare_matrix(&trans_bt, &bt_expected, tolerance, "mat mult bt");
+    counter++;
+    free_matrix(&mat_og1);
+    free_matrix(&mat_og3);
+    free_matrix(&mat_trans3);
+    free_matrix(&trans_bt);
+    free_matrix(&bt_expected);
+
+
     printf("%d tests, %d failed\n", counter, fail_counter);
     return fail_counter > 0;
 }
