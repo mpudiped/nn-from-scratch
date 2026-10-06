@@ -126,6 +126,30 @@ int main(void) {
     free_matrix(&trans_bt);
     free_matrix(&bt_expected);
 
+    // Test bias vector add
+    Matrix pre_bias = init_matrix(4, 3);
+    const float pre_bias_vals[] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
+    fill_mat_from_arr(&pre_bias, pre_bias_vals, sizeof(pre_bias_vals)/sizeof(pre_bias_vals[0]));
+    Matrix post_bias = init_matrix(4, 3);
+    const float post_bias_vals[] = {11, 13, 15, 14, 16, 18, 17, 19, 21, 20, 22, 24};
+    fill_mat_from_arr(&post_bias, post_bias_vals, sizeof(post_bias_vals)/sizeof(post_bias_vals[0]));
+    Matrix bias = init_matrix(1, 3);
+    const float bias_fill[] = {1, 2, 3};
+    fill_mat_from_arr(&bias, bias_fill, sizeof(bias_fill)/sizeof(bias_fill[0]));
+    
+    Matrix bias_output = init_matrix(4, 3);
+    mat_add_row_vec(&bias_output, &pre_bias, &bias);
+    fail_counter += compare_matrix(&bias_output, &post_bias, tolerance, "test adding bias to new mat");
+    counter++;
+
+    mat_add_row_vec(&pre_bias, &pre_bias, &bias);
+    fail_counter += compare_matrix(&pre_bias, &post_bias, tolerance, "test in place adding bias");
+    counter++;
+
+    free_matrix(&bias_output);
+    free_matrix(&pre_bias);
+    free_matrix(&post_bias);
+    free_matrix(&bias);
 
     printf("%d tests, %d failed\n", counter, fail_counter);
     return fail_counter > 0;

@@ -115,3 +115,16 @@ void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B) {
         }
     }
 }
+
+void mat_add_row_vec(Matrix* C, const Matrix* A, const Matrix* Bias) {
+    assert(A != NULL && Bias != NULL && C != NULL);
+    assert(A->mat != NULL && Bias->mat != NULL && C->mat != NULL);
+    assert(Bias->rows == 1);
+    assert(A->cols == Bias->cols);
+    assert(A->rows == C->rows && A->cols == C->cols);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < A->cols; j++) {
+            C->mat[i * C->cols + j] = A->mat[i * A->cols + j] + Bias->mat[j];
+        }
+    }
+}

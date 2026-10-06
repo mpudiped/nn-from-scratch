@@ -169,4 +169,27 @@ void mat_mult_at_b(Matrix* C, const Matrix* A, const Matrix* B);
  * A and B are not changed. No memory is allocated.
  */
 void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B);
+
+/*
+ * Adds the row vector Bias to every row of A, and stores the result in C.
+ *
+ * A, Bias and C must not be NULL, and none of them may be empty.
+ *
+ * The shapes must agree: Bias must have exactly one row, Bias->cols must
+ * equal A->cols, and C must have the same number of rows and columns
+ * as A. So if A is m x n, Bias must be 1 x n and C must already be an
+ * m x n matrix.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of C has been overwritten:
+ * C[i][j] is A[i][j] + Bias[0][j].
+ * C does not need to be zeroed first.
+ *
+ * C may be the same matrix as A. In that case A is updated in place.
+ * Otherwise A is not changed. Bias is never changed. No memory is
+ * allocated.
+ */
+void mat_add_row_vec(Matrix* C, const Matrix* A, const Matrix* Bias);
 #endif
