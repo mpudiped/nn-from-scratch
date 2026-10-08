@@ -108,25 +108,25 @@ void fill_mat_from_arr(Matrix* m, const float* arr, int count);
 void mat_mult(Matrix* C, const Matrix* A, const Matrix* B);
 
 /*
- * Writes the transpose of A into transposed.
+ * Writes the transpose of A into At.
  *
- * A and transposed must not be NULL, and neither may be empty.
- * transposed must not share its memory with A.
+ * A and At must not be NULL, and neither may be empty.
+ * At must not share its memory with A.
  *
- * The shapes must agree: transposed->rows must equal A->cols, and
- * transposed->cols must equal A->rows. So if A is m x n, transposed
+ * The shapes must agree: At->rows must equal A->cols, and
+ * At->cols must equal A->rows. So if A is m x n, At
  * must already be an n x m matrix.
  *
  * Anything else is a bug in the calling code and stops the program
  * with an assertion.
  *
- * Afterwards, every element of transposed has been overwritten:
- * transposed[j][i] is A[i][j]. The rows of A become the columns of
- * transposed.
+ * Afterwards, every element of At has been overwritten:
+ * At[j][i] is A[i][j]. The rows of A become the columns of
+ * At.
  *
  * A is not changed. No memory is allocated.
  */
-void mat_transpose(Matrix* transposed, const Matrix* A);
+void mat_transpose(Matrix* At, const Matrix* A);
 
 /*
  * Computes C = (A transposed) * B, without building the transpose of A.
@@ -258,4 +258,30 @@ void mat_element_mult(Matrix* C, const Matrix* A, const Matrix* B);
  * Otherwise A is not changed. No memory is allocated.
  */
 void mat_apply(Matrix* B, const Matrix* A, float (*op)(float));
+
+/*
+ * Computes C = A - s * B, element by element.
+ *
+ * A, B and C must not be NULL, and none of them may be empty.
+ *
+ * The shapes must agree: A, B and C must all have the same number of
+ * rows and the same number of columns.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of C has been overwritten:
+ * C[i][j] is A[i][j] - s * B[i][j].
+ * C does not need to be zeroed first.
+ *
+ * s may be any value. A negative s adds a multiple of B instead.
+ *
+ * C may be the same matrix as A or as B. In that case that input is
+ * updated in place. Otherwise A and B are not changed. No memory is
+ * allocated.
+ *
+ * Typical use is the gradient descent update, with the weights as both
+ * C and A, their gradient as B, and the learning rate as s.
+ */
+void mat_scaled_subtract(Matrix* C, const Matrix* A, const Matrix* B, float s);
 #endif

@@ -68,14 +68,14 @@ void mat_mult(Matrix* C, const Matrix* A, const Matrix* B) {
     }
 }
 
-void mat_transpose(Matrix* transposed, const Matrix* A) {
-    assert(transposed != NULL && A != NULL);
-    assert(transposed->mat != NULL && A->mat != NULL);
-    assert(transposed->mat != A->mat);
-    assert(transposed->rows == A->cols && transposed->cols == A->rows);
+void mat_transpose(Matrix* At, const Matrix* A) {
+    assert(At != NULL && A != NULL);
+    assert(At->mat != NULL && A->mat != NULL);
+    assert(At->mat != A->mat);
+    assert(At->rows == A->cols && At->cols == A->rows);
     for (int i = 0; i < A->rows; i++) {
         for (int j = 0; j < A->cols; j++) {
-            transposed->mat[j * transposed->cols + i] = A->mat[i * A->cols + j];
+            At->mat[j * At->cols + i] = A->mat[i * A->cols + j];
         }
     }
 }
@@ -163,6 +163,18 @@ void mat_apply(Matrix* B, const Matrix* A, float (*op)(float)) {
     for (int i = 0; i < A->rows; i++) {
         for (int j = 0; j < A->cols; j++) {
             B->mat[i * B->cols + j] = op(A->mat[i * A->cols + j]);
+        }
+    }
+}
+
+void mat_scaled_subtract(Matrix* C, const Matrix* A, const Matrix* B, float s) {
+    assert(A != NULL && B != NULL && C != NULL);
+    assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);
+    assert(A->rows == B->rows && A->cols == B->cols);
+    assert(C->rows == A->rows && C->cols == A->cols);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < A->cols; j++) {
+            C->mat[i * C->cols + j] = A->mat[i * A->cols + j] - B->mat[i * B->cols + j] * s;
         }
     }
 }

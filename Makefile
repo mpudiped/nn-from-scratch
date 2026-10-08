@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -std=c17 -MMD -MP  -Wall -Wextra -Wpedantic
+CFLAGS = -std=c17 -MMD -MP  -Wall -Wextra -Wpedantic -Wdouble-promotion
 LDFLAGS =
 LDLIBS = -lm
 

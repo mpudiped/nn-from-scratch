@@ -207,6 +207,26 @@ int main(void) {
     mat_free(&post_apply);
     mat_free(&expected_post_apply);
     
+    // Test mat scaled subtract
+    Matrix pre_sub = mat_init(2, 3);
+    fill_mat_from_arr(&pre_sub, fill, sizeof(fill)/sizeof(fill[0]));
+    Matrix sub_mat = mat_init(2,3);
+    const float sub_mat_vals[] = {2, 4, 6, 8, 10, 12};
+    fill_mat_from_arr(&sub_mat, sub_mat_vals, sizeof(sub_mat_vals)/sizeof(sub_mat_vals[0]));
+    Matrix post_sub = mat_init(2, 3);
+    mat_scaled_subtract(&post_sub, &pre_sub, &sub_mat, 2);
+    Matrix expected_sub = mat_init(2, 3);
+    const float expected_sub_vals[] = {-3, -6, -9, -12, -15, -18};
+    fill_mat_from_arr(&expected_sub, expected_sub_vals, sizeof(expected_sub_vals)/sizeof(expected_sub_vals[0]));
+
+    fail_counter += compare_matrix(&post_sub, &expected_sub, tolerance, "test mat scaled subtract");
+    counter++;
+
+    mat_free(&pre_sub);
+    mat_free(&sub_mat);
+    mat_free(&post_sub);
+    mat_free(&expected_sub);
+
     printf("%d tests, %d failed\n", counter, fail_counter);
     return fail_counter > 0;
 }
