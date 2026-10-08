@@ -20,9 +20,9 @@ typedef struct {
  * and rows == cols == 0. Check mat before using the matrix.
  *
  * The caller owns the returned matrix and must release it with
- * free_matrix() exactly once.
+ * mat_free() exactly once.
  */
-Matrix init_matrix(int rows, int cols);
+Matrix mat_init(int rows, int cols);
 
 /*
  * Releases the memory owned by a matrix and leaves it empty.
@@ -34,12 +34,12 @@ Matrix init_matrix(int rows, int cols);
  * itself is not freed; it belongs to the caller.
  *
  * Safe to call more than once on the same matrix, and safe to call on
- * a matrix whose init_matrix() failed. In both cases it does nothing.
+ * a matrix whose mat_init() failed. In both cases it does nothing.
  *
  * Any other Matrix struct that was copied from this one still points
  * at the released memory and must not be used afterwards.
  */
-void free_matrix(Matrix* m);
+void mat_free(Matrix* m);
 
 /*
  * Returns the position in m->mat of the element at row i, column j.
@@ -67,7 +67,7 @@ int get_index(const Matrix* m, int row, int col);
  *
  * Does not change the matrix.
  */
-void print_matrix(const Matrix* m);
+void mat_print(const Matrix* m);
 
 /*
  * Copies count values from arr into the matrix, in row-major order.
@@ -192,4 +192,70 @@ void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B);
  * allocated.
  */
 void mat_add_row_vec(Matrix* C, const Matrix* A, const Matrix* Bias);
+
+/*
+ * Sums each column of A, and stores the totals in B.
+ *
+ * A and B must not be NULL, and neither may be empty.
+ *
+ * The shapes must agree: B must have exactly one row, and B->cols must
+ * equal A->cols. So if A is m x n, B must already be a 1 x n matrix.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of B has been overwritten:
+ * B[0][j] is the sum over i of A[i][j].
+ * B does not need to be zeroed first.
+ *
+ * A is not changed. No memory is allocated.
+ */
+void mat_sum_cols(Matrix* B, const Matrix* A);
+
+/*
+ * Multiplies A and B element by element, and stores the result in C.
+ * This is not matrix multiplication: each element is multiplied only
+ * by the element in the same position.
+ *
+ * A, B and C must not be NULL, and none of them may be empty.
+ *
+ * The shapes must agree: A, B and C must all have the same number of
+ * rows and the same number of columns.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of C has been overwritten:
+ * C[i][j] is A[i][j] * B[i][j].
+ * C does not need to be zeroed first.
+ *
+ * C may be the same matrix as A or as B. In that case that input is
+ * updated in place. Otherwise A and B are not changed. No memory is
+ * allocated.
+ */
+void mat_element_mult(Matrix* C, const Matrix* A, const Matrix* B);
+
+/*
+ * Applies op to every element of A, and stores the results in B.
+ *
+ * A and B must not be NULL, and neither may be empty. op must not be
+ * NULL. It must be a function that takes one float and returns one
+ * float, such as an activation function or its derivative.
+ *
+ * The shapes must agree: B must have the same number of rows and
+ * columns as A.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Afterwards, every element of B has been overwritten:
+ * B[i][j] is op(A[i][j]).
+ * B does not need to be zeroed first.
+ *
+ * op is called exactly once for each element.
+ *
+ * B may be the same matrix as A. In that case A is updated in place.
+ * Otherwise A is not changed. No memory is allocated.
+ */
+void mat_apply(Matrix* B, const Matrix* A, float (*op)(float));
 #endif

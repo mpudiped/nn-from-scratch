@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-Matrix init_matrix(int rows, int cols) {
+Matrix mat_init(int rows, int cols) {
     assert(rows > 0 && cols > 0);
     Matrix matrix = {
         .rows = rows,
@@ -17,7 +17,7 @@ Matrix init_matrix(int rows, int cols) {
     return matrix;
 }
 
-void free_matrix(Matrix* m) {
+void mat_free(Matrix* m) {
     assert(m != NULL);
     free(m->mat);
     m->mat = NULL;
@@ -31,7 +31,7 @@ int get_index(const Matrix* m, int row, int col) {
     return row * m->cols + col;
 }
 
-void print_matrix(const Matrix* m) {
+void mat_print(const Matrix* m) {
     assert(m != NULL && m->mat != NULL);
     for(int i = 0; i < m->rows; i++) {
         for(int j = 0; j < m->cols; j++) {
@@ -125,6 +125,44 @@ void mat_add_row_vec(Matrix* C, const Matrix* A, const Matrix* Bias) {
     for (int i = 0; i < A->rows; i++) {
         for (int j = 0; j < A->cols; j++) {
             C->mat[i * C->cols + j] = A->mat[i * A->cols + j] + Bias->mat[j];
+        }
+    }
+}
+
+void mat_sum_cols(Matrix* B, const Matrix* A) {
+    assert(A != NULL && B != NULL);
+    assert(A->mat != NULL && B->mat != NULL);
+    assert(B->cols == A->cols);
+    assert(B->rows == 1);
+    for (int i = 0; i < A->cols; i++) {
+        float curr = 0.0f;
+        for (int j = 0; j < A->rows; j++) {
+            curr += A->mat[j * A->cols + i];
+        }
+        B->mat[i] = curr;
+    }
+}
+
+void mat_element_mult(Matrix* C, const Matrix* A, const Matrix* B) {
+    assert(A != NULL && B != NULL && C != NULL);
+    assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);
+    assert(A->rows == B->rows && A->cols == B->cols);
+    assert(C->rows == A->rows && C->cols == A->cols);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < A->cols; j++) {
+            C->mat[i * C->cols +j] = A->mat[i * A->cols + j] * B->mat[i * B->cols + j];
+        }
+    }
+}
+
+void mat_apply(Matrix* B, const Matrix* A, float (*op)(float)) {
+    assert(A != NULL && B != NULL);
+    assert(A->mat != NULL && B->mat != NULL);
+    assert(A->rows == B->rows && A->cols == B->cols);
+    assert(op != NULL);
+    for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < A->cols; j++) {
+            B->mat[i * B->cols + j] = op(A->mat[i * A->cols + j]);
         }
     }
 }
