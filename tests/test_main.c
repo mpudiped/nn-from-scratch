@@ -1,6 +1,6 @@
 #include "test_matrix.h"
 #include "../src/matrix.h"
-#include "../src/activations.h"
+#include "../src/loss_activations.h"
 #include <stdio.h>
 
 int main(void) {
