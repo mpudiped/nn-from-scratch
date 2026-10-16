@@ -1,8 +1,8 @@
 #include "../src/matrix.h"
 
-#ifndef TEST_MATRIX_H
+#ifndef TEST_HELPERS_H
 
-#define TEST_MATRIX_H
+#define TEST_HELPERS_H
 
 int check_init(const Matrix* m, int exp_rows, int exp_cols, const char* test_name);
 

@@ -112,4 +112,6 @@ float binary_cross_entropy_deriv(float y, float p);
  * not changed. No memory is allocated.
  */
 void mat_sigmoid_bce_grad(Matrix* Output, const Matrix* Truth, const Matrix* Probs);
+
+float mean_bce(const Matrix* Truth, const Matrix* P);
 #endif

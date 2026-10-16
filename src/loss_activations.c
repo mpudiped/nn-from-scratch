@@ -54,3 +54,18 @@ void mat_sigmoid_bce_grad(Matrix* Output, const Matrix* Truth, const Matrix* Pro
         }
     }
 }
+
+float mean_bce(const Matrix* Truth, const Matrix* P) {
+    assert(Truth != NULL && P != NULL);
+    assert(Truth->mat != NULL && P->mat != NULL);
+    assert(Truth->mat != P->mat);
+    assert(Truth->rows == P->rows && Truth->cols == P->cols);
+    float sum = 0.0f;
+    for (int i = 0; i < Truth->rows; i++) {
+        for (int j = 0; j < Truth->cols; j++) {
+            sum += binary_cross_entropy(Truth->mat[i * Truth->cols + j], P->mat[i * P->cols + j]);
+        }
+    }
+    float average = sum / Truth->rows;
+    return average;
+}

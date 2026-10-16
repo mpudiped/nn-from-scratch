@@ -1,4 +1,4 @@
-#include "test_matrix.h"
+#include "test_helpers.h"
 #include "../src/matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
