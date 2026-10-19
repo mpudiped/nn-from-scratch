@@ -4,7 +4,7 @@
 typedef struct {
     int rows;
     int cols;
-    float* mat;
+    float *mat;
 } Matrix;
 
 /*
@@ -39,7 +39,7 @@ Matrix mat_init(int rows, int cols);
  * Any other Matrix struct that was copied from this one still points
  * at the released memory and must not be used afterwards.
  */
-void mat_free(Matrix* m);
+void mat_free(Matrix *m);
 
 /*
  * Returns the position in m->mat of the element at row i, column j.
@@ -53,7 +53,7 @@ void mat_free(Matrix* m);
  *
  * Does not read or change the matrix's elements.
  */
-int get_index(const Matrix* m, int row, int col);
+int get_index(const Matrix *m, int row, int col);
 
 /*
  * Prints the matrix to standard output, one row per line.
@@ -67,7 +67,7 @@ int get_index(const Matrix* m, int row, int col);
  *
  * Does not change the matrix.
  */
-void mat_print(const Matrix* m);
+void mat_print(const Matrix *m);
 
 /*
  * Copies count values from arr into the matrix, in row-major order.
@@ -84,7 +84,7 @@ void mat_print(const Matrix* m);
  * The values are copied. The matrix does not keep a reference to arr,
  * so arr can be changed or released after the call.
  */
-void fill_mat_from_arr(Matrix* m, const float* arr, int count);
+void fill_mat_from_arr(Matrix *m, const float *arr, int count);
 
 /*
  * Computes the matrix product C = A * B.
@@ -105,7 +105,7 @@ void fill_mat_from_arr(Matrix* m, const float* arr, int count);
  *
  * A and B are not changed. No memory is allocated.
  */
-void mat_mult(Matrix* C, const Matrix* A, const Matrix* B);
+void mat_mult(Matrix *C, const Matrix *A, const Matrix *B);
 
 /*
  * Writes the transpose of A into At.
@@ -126,7 +126,7 @@ void mat_mult(Matrix* C, const Matrix* A, const Matrix* B);
  *
  * A is not changed. No memory is allocated.
  */
-void mat_transpose(Matrix* At, const Matrix* A);
+void mat_transpose(Matrix *At, const Matrix *A);
 
 /*
  * Computes C = (A transposed) * B, without building the transpose of A.
@@ -147,7 +147,7 @@ void mat_transpose(Matrix* At, const Matrix* A);
  *
  * A and B are not changed. No memory is allocated.
  */
-void mat_mult_at_b(Matrix* C, const Matrix* A, const Matrix* B);
+void mat_mult_at_b(Matrix *C, const Matrix *A, const Matrix *B);
 
 /*
  * Computes C = A * (B transposed), without building the transpose of B.
@@ -168,7 +168,7 @@ void mat_mult_at_b(Matrix* C, const Matrix* A, const Matrix* B);
  *
  * A and B are not changed. No memory is allocated.
  */
-void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B);
+void mat_mult_a_bt(Matrix *C, const Matrix *A, const Matrix *B);
 
 /*
  * Adds the row vector Bias to every row of A, and stores the result in C.
@@ -191,7 +191,7 @@ void mat_mult_a_bt(Matrix* C, const Matrix* A, const Matrix* B);
  * Otherwise A is not changed. Bias is never changed. No memory is
  * allocated.
  */
-void mat_add_row_vec(Matrix* C, const Matrix* A, const Matrix* Bias);
+void mat_add_row_vec(Matrix *C, const Matrix *A, const Matrix *Bias);
 
 /*
  * Sums each column of A, and stores the totals in B.
@@ -210,7 +210,7 @@ void mat_add_row_vec(Matrix* C, const Matrix* A, const Matrix* Bias);
  *
  * A is not changed. No memory is allocated.
  */
-void mat_sum_cols(Matrix* B, const Matrix* A);
+void mat_sum_cols(Matrix *B, const Matrix *A);
 
 /*
  * Multiplies A and B element by element, and stores the result in C.
@@ -233,7 +233,7 @@ void mat_sum_cols(Matrix* B, const Matrix* A);
  * updated in place. Otherwise A and B are not changed. No memory is
  * allocated.
  */
-void mat_element_mult(Matrix* C, const Matrix* A, const Matrix* B);
+void mat_element_mult(Matrix *C, const Matrix *A, const Matrix *B);
 
 /*
  * Applies op to every element of A, and stores the results in B.
@@ -257,7 +257,7 @@ void mat_element_mult(Matrix* C, const Matrix* A, const Matrix* B);
  * B may be the same matrix as A. In that case A is updated in place.
  * Otherwise A is not changed. No memory is allocated.
  */
-void mat_apply(Matrix* B, const Matrix* A, float (*op)(float));
+void mat_apply(Matrix *B, const Matrix *A, float (*op)(float));
 
 /*
  * Computes C = A - s * B, element by element.
@@ -283,5 +283,6 @@ void mat_apply(Matrix* B, const Matrix* A, float (*op)(float));
  * Typical use is the gradient descent update, with the weights as both
  * C and A, their gradient as B, and the learning rate as s.
  */
-void mat_scaled_subtract(Matrix* C, const Matrix* A, const Matrix* B, float s);
+void mat_scaled_subtract(Matrix *C, const Matrix *A, const Matrix *B, float s);
+
 #endif

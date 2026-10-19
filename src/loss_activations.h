@@ -3,7 +3,6 @@
 #ifndef LOSS_ACTIVATIONS_H
 
 #define LOSS_ACTIVATIONS_H
-
 /*
  * The ReLU activation: returns x if x is positive, and 0 otherwise.
  *
@@ -49,7 +48,7 @@ float sigmoid_deriv(float x);
  *
  * y is the target, 0 or 1. p is the predicted probability that the
  * target is 1, normally the output of sigmoid.
- * 
+ *
  * p must not be NaN. A NaN p means something earlier has gone wrong,
  * such as NaN in the weights, and stops the program with an assertion
  * instead of being clamped to an ordinary-looking value.
@@ -111,7 +110,34 @@ float binary_cross_entropy_deriv(float y, float p);
  * Output may be the same matrix as Truth or Probs. Otherwise they are
  * not changed. No memory is allocated.
  */
-void mat_sigmoid_bce_grad(Matrix* Output, const Matrix* Truth, const Matrix* Probs);
+void mat_sigmoid_bce_grad(Matrix *Output, const Matrix *Truth, const Matrix *Probs);
 
-float mean_bce(const Matrix* Truth, const Matrix* P);
+/*
+ * Returns the binary cross-entropy loss averaged over a batch.
+ *
+ * Each row is one example. Truth holds the targets, 0 or 1, and P holds
+ * the predicted probabilities, normally the output of the forward pass.
+ *
+ * Truth and P must not be NULL and neither may be empty.
+ * They must have the same number of rows and columns.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * The result is the sum of binary_cross_entropy over every element,
+ * divided by the number of rows, the batch size. With one column,
+ * that is the plain average over the examples. This matches the
+ * division in mat_sigmoid_bce_grad, so this is the loss whose gradient
+ * that function computes. Gradient checking relies on the two agreeing.
+ *
+ * Each p is clamped inside binary_cross_entropy, so the result is
+ * always finite. A NaN in P stops the program with an assertion.
+ *
+ * The result is never negative. If every p is 0.5, it is ln 2, about
+ * 0.693, whatever the targets are.
+ *
+ * Truth and P are not changed. No memory is allocated.
+ */
+float mean_bce(const Matrix *Truth, const Matrix *P);
+
 #endif

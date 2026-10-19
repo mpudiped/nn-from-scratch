@@ -1,0 +1,27 @@
+---
+# Use LLVM as the foundation (clean, modern, standard)
+BasedOnStyle: LLVM
+
+# Language targeting C
+Language: Cpp
+
+# Indentation rules
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Column limit before wrapping long math equations
+ColumnLimit: 100
+
+# Keeps brackets on the same line to keep math/loops compact
+BreakBeforeBraces: Attach
+
+# Clean up pointer alignments for things like double** weights
+PointerAlignment: Right
+
+# Sort #include directives (e.g., math.h, stdio.h) alphabetically
+SortIncludes: true
+
+# Keep tiny helper functions (like activation functions) compact
+AllowShortFunctionsOnASingleLine: Inline
+...
