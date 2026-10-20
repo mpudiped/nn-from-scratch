@@ -1,8 +1,8 @@
 #include "test_grads.h"
-#include "test_helpers.h"
 #include "../src/layer.h"
 #include "../src/loss_activations.h"
 #include "../src/matrix.h"
+#include "test_helpers.h"
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -56,8 +56,9 @@ Counts test_grads(void) {
             Weights.mat[i * Weights.cols + j] = saved_weight;
 
             float symmetric_grad = (loss_plus_h - loss_minus_h) / (2 * h);
-            float relative_error = fabsf(symmetric_grad - dW.mat[i * dW.cols + j]) /
-                                   (fmaxf(fabsf(symmetric_grad), fabsf(dW.mat[i * dW.cols + j])) + add_den);
+            float relative_error =
+                fabsf(symmetric_grad - dW.mat[i * dW.cols + j]) /
+                (fmaxf(fabsf(symmetric_grad), fabsf(dW.mat[i * dW.cols + j])) + add_den);
             if (relative_error < threshold) {
                 printf("PASS Relative gradient error (%g) is within tolerance for weight at row "
                        "%d, col %d\n",
@@ -84,8 +85,9 @@ Counts test_grads(void) {
             Bias.mat[i * Bias.cols + j] = saved_bias;
 
             float symmetric_grad = (loss_plus_h - loss_minus_h) / (2 * h);
-            float relative_error = fabsf(symmetric_grad - dB.mat[i * dB.cols + j]) /
-                                   (fmaxf(fabsf(symmetric_grad), fabsf(dB.mat[i * dB.cols + j])) + add_den);
+            float relative_error =
+                fabsf(symmetric_grad - dB.mat[i * dB.cols + j]) /
+                (fmaxf(fabsf(symmetric_grad), fabsf(dB.mat[i * dB.cols + j])) + add_den);
             if (relative_error < threshold) {
                 printf("PASS Relative gradient error (%g) is within tolerance for bias at row "
                        "%d, col %d\n",
@@ -109,10 +111,7 @@ Counts test_grads(void) {
 
     printf("%d tests, %d failed\n", counter, fail_counter);
 
-    Counts counts = {
-        .counter = counter,
-        .fail_counter = fail_counter
-    };
+    Counts counts = {.counter = counter, .fail_counter = fail_counter};
 
     return counts;
 }

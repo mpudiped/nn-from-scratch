@@ -6,10 +6,7 @@
 
 int main(void) {
     // Test Helper
-    Counts final_counters = {
-        .counter = 0,
-        .fail_counter = 0
-    };
+    Counts final_counters = {.counter = 0, .fail_counter = 0};
 
     // Test Matrix Library
     Counts matlib = test_matlib();

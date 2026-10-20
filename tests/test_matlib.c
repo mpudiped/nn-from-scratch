@@ -240,10 +240,7 @@ Counts test_matlib(void) {
 
     printf("%d tests, %d failed\n", counter, fail_counter);
 
-    Counts counts = {
-        .counter = counter,
-        .fail_counter = fail_counter
-    };
+    Counts counts = {.counter = counter, .fail_counter = fail_counter};
 
     return counts;
 }

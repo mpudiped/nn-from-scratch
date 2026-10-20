@@ -1,10 +1,34 @@
 #ifndef MATRIX_H
 
 #define MATRIX_H
+/*
+ * A matrix of floats with a fixed number of rows and columns.
+ *
+ * The elements are stored in one contiguous block of rows * cols
+ * floats, in row-major order: all of row 0, then all of row 1, and so
+ * on. The element at row i, column j is mat[i * cols + j].
+ *
+ * Create a Matrix with mat_init and release it with mat_free. Every
+ * Matrix from mat_init must be passed to mat_free exactly once its
+ * memory is no longer needed; calling mat_free again afterwards is
+ * safe.
+ *
+ * A Matrix with mat == NULL and rows == cols == 0 is empty. That is
+ * the state after mat_free, and also what mat_init returns if the
+ * allocation fails. Library functions treat an empty Matrix as a bug
+ * and stop with an assertion.
+ *
+ * Copying a Matrix (for example by assigning one to another, or by
+ * passing one by value) copies only these three fields, not the
+ * elements. Both copies then point at the same block of memory:
+ * a change through one is seen through the other, and after one is
+ * freed the other must not be used. Use mat_transpose, fill_mat_from_arr
+ * or a loop to copy the elements themselves.
+ */
 typedef struct {
-    int rows;
-    int cols;
-    float *mat;
+    int rows;   /* number of rows, at least 1 unless the matrix is empty */
+    int cols;   /* number of columns, at least 1 unless the matrix is empty */
+    float *mat; /* the rows * cols elements, owned by this Matrix */
 } Matrix;
 
 /*
@@ -85,6 +109,26 @@ void mat_print(const Matrix *m);
  * so arr can be changed or released after the call.
  */
 void fill_mat_from_arr(Matrix *m, const float *arr, int count);
+
+/*
+ * Creates a rows x cols matrix and fills it with the first count values
+ * of arr, in row-major order: arr[0 .. cols-1] becomes row 0, the next
+ * cols values become row 1, and so on.
+ *
+ * rows and cols must both be at least 1, arr must not be NULL, and
+ * count must equal rows * cols. arr must hold at least count floats.
+ * Pass the count with ARRAY_LEN when arr is a real array.
+ *
+ * Anything else is a bug in the calling code and stops the program
+ * with an assertion.
+ *
+ * Unlike mat_init, this does not return an empty matrix if the
+ * allocation fails: the program stops with an assertion instead.
+ *
+ * arr is not changed. The caller owns the returned matrix and must
+ * release it with mat_free.
+ */
+Matrix mat_from_arr(int rows, int cols, const float *arr, int count);
 
 /*
  * Computes the matrix product C = A * B.
@@ -285,4 +329,23 @@ void mat_apply(Matrix *B, const Matrix *A, float (*op)(float));
  */
 void mat_scaled_subtract(Matrix *C, const Matrix *A, const Matrix *B, float s);
 
+/*
+ * The number of elements in an array: its total size in bytes divided
+ * by the size of one element.
+ *
+ * Only works on a real array whose size is visible where the macro is
+ * used, such as a local `const float vals[] = {...};`. Given a pointer,
+ * including an array passed into a function as a parameter, it silently
+ * gives the wrong answer: sizeof then measures the pointer (8 bytes on
+ * a 64-bit machine), not the array. That is also why this has to be a
+ * macro rather than a function.
+ *
+ * The result has type size_t. sizeof does not evaluate its operand, so
+ * it is safe to pass any expression.
+ */
+#ifndef ARRAY_LEN
+#define ARRAY_LEN(arr) (sizeof(arr) / sizeof((arr)[0]))
 #endif
+
+#endif
+

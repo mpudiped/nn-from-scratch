@@ -1,27 +1,44 @@
 ---
-# Use LLVM as the foundation (clean, modern, standard)
+# Start from LLVM's style and override only what differs below.
 BasedOnStyle: LLVM
 
-# Language targeting C
+# clang-format uses "Cpp" for C, C++ and Objective-C files alike.
 Language: Cpp
 
-# Indentation rules
+# Indent with 4 spaces, never tab characters, so the code looks the
+# same in every editor.
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
-# Column limit before wrapping long math equations
+# Wrap lines longer than 100 characters. Long index expressions such as
+# A->mat[i * A->cols + k] fit on one line more often than at LLVM's 80.
 ColumnLimit: 100
 
-# Keeps brackets on the same line to keep math/loops compact
+# Opening braces stay on the same line as the if, for or function.
+# (Also LLVM's default; listed to make the choice explicit.)
 BreakBeforeBraces: Attach
 
-# Clean up pointer alignments for things like double** weights
+# The * sits next to the name, not the type: Matrix *P, float *mat.
+# (Also LLVM's default.) This matches how C parses a declaration like
+# float *a, b; where only a is a pointer.
 PointerAlignment: Right
 
-# Sort #include directives (e.g., math.h, stdio.h) alphabetically
-SortIncludes: true
+# Short functions whose body fits on one line are joined onto it, e.g.
+#   float relu_deriv(float x) { return x > 0.0f ? 1.0f : 0.0f; }
+# Longer functions are left on several lines.
+AllowShortFunctionsOnASingleLine: All
 
-# Keep tiny helper functions (like activation functions) compact
-AllowShortFunctionsOnASingleLine: Inline
+# Never put an if, loop or case body on the same line as its condition,
+# so every body is visible at a glance and easy to set a breakpoint on.
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+
+# Sort #include lines alphabetically within each block. A blank line
+# starts a new block, so keep your own headers and the system headers
+# (<stdio.h>, <math.h>, ...) in separate blocks. A file's own header,
+# e.g. layer.h in layer.c, is always kept first.
+SortIncludes: CaseSensitive
+IncludeBlocks: Preserve
 ...

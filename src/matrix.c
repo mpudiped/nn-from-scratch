@@ -47,6 +47,15 @@ void fill_mat_from_arr(Matrix *m, const float *arr, int count) {
     }
 }
 
+Matrix mat_from_arr(int rows, int cols, const float *arr, int count) {
+    assert(rows > 0 && cols > 0);
+    assert(arr != NULL);
+    assert(count == rows * cols);
+    Matrix matrix = mat_init(rows, cols);
+    fill_mat_from_arr(&matrix, arr, count);
+    return matrix;
+}
+
 void mat_mult(Matrix *C, const Matrix *A, const Matrix *B) {
     assert(A != NULL && B != NULL && C != NULL);
     assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);

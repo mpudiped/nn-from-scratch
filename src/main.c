@@ -1,56 +1,63 @@
 #include "loss_activations.h"
 #include "matrix.h"
+#include "layer.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(void) {
-    Matrix A = mat_init(2, 2);
-    const float fill[] = {1.0, 2.0, 3.0, 4.0};
-    fill_mat_from_arr(&A, fill, sizeof(fill) / sizeof(fill[0]));
-    mat_print(&A);
-    printf("\n");
+    const float fill_X[] = {0, 0, 0, 1, 1, 0, 1, 1};
+    Matrix X = mat_from_arr(4, 2, fill_X, ARRAY_LEN(fill_X));
 
-    Matrix C = mat_init(2, 2);
-    mat_mult(&C, &A, &A);
-    mat_print(&C);
-    printf("\n");
+    const float fill_W[] = {0.5f, -0.3f};
+    Matrix W = mat_from_arr(2, 1, fill_W, ARRAY_LEN(fill_W));
 
-    mat_free(&A);
-    mat_free(&C);
+    const float fill_b[] = {1.3f};
+    Matrix b = mat_from_arr(1, 1, fill_b, ARRAY_LEN(fill_b));
 
-    Matrix I = mat_init(3, 3);
-    const float identity[] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
-    fill_mat_from_arr(&I, identity, sizeof(identity) / sizeof(identity[0]));
-    Matrix N = mat_init(3, 3);
-    mat_mult(&N, &I, &I);
-    mat_print(&I);
-    printf("\n");
-    mat_print(&N);
-    printf("\n");
-    mat_free(&I);
-    mat_free(&N);
+    Matrix Truth;
 
-    Matrix And_Gate = mat_init(2, 1);
-    const float And_Params[] = {0.5, 0.5};
-    fill_mat_from_arr(&And_Gate, And_Params, sizeof(And_Params) / sizeof(And_Params[0]));
-    Matrix input = mat_init(1, 2);
-    input.mat[0] = 0;
-    input.mat[1] = 1;
-    Matrix output = mat_init(1, 1);
-    mat_mult(&output, &input, &And_Gate);
-    if (output.mat[0] <= 0.5) {
-        printf("0\n");
+    char target[] = "Or";
+    if (strcmp(target, "And") == 0) {
+        const float fill_Truth[] = {0, 0, 0, 1};
+        Truth = mat_from_arr(4, 1, fill_Truth, ARRAY_LEN(fill_Truth));
+    } else if (strcmp(target, "Or") == 0) {
+        const float fill_Truth[] = {0, 1, 1, 1};
+        Truth = mat_from_arr(4, 1, fill_Truth, ARRAY_LEN(fill_Truth));
     } else {
-        printf("1\n");
+        fprintf(stderr, "Error: target is neither \"And\" or \"Or\", it is %s\n", target);
+        return 1;
     }
 
-    Matrix pre_trans = mat_init(2, 3);
-    const float pre_trans_fill[] = {1, 2, 3, 4, 5, 6};
-    fill_mat_from_arr(&pre_trans, pre_trans_fill,
-                      sizeof(pre_trans_fill) / sizeof(pre_trans_fill[0]));
-    Matrix post_trans = mat_init(3, 2);
-    mat_transpose(&post_trans, &pre_trans);
-    mat_print(&pre_trans);
-    printf("\n");
-    mat_print(&post_trans);
+    Matrix P = mat_init(4, 1);
+    Matrix dW = mat_init(2, 1);
+    Matrix db = mat_init(1, 1);
+
+    const int steps = 10000;
+    const float learning_rate = 1.0f;
+
+    forward_pass(&P, &X, &W, &b);
+    printf("Starting loss is %g\n", mean_bce(&Truth, &P));
+    for (int i = 0; i < steps; i++) {
+        forward_pass(&P, &X, &W, &b);
+        backward_pass(&dW, &db, &X, &P, &Truth);
+        mat_scaled_subtract(&W, &W, &dW, learning_rate);
+        mat_scaled_subtract(&b, &b, &db, learning_rate);
+        if (i % 500 == 0 && i != 0) {
+            printf("Loss after step %d is %g\n", i, mean_bce(&Truth, &P));
+        }
+    }
+
+    forward_pass(&P, &X, &W, &b);
+    printf("\n%g, %g, %g, %g\n", P.mat[0], P.mat[1], P.mat[2], P.mat[3]);
+
+    mat_free(&X);
+    mat_free(&W);
+    mat_free(&b);
+    mat_free(&Truth);
+    mat_free(&P);
+    mat_free(&dW);
+    mat_free(&db);
+
+    return 0;
 }
