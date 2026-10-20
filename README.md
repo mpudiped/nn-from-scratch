@@ -24,7 +24,7 @@ runs a matrix multiply.
       modes, automatic header dependencies, and a test target.
 - [x] **Phase 1: Matrix library.** Every operation tested against
       hand-computed answers, including non-square shapes.
-- [ ] **Phase 2: Single neuron.** Logistic regression on AND and OR, with
+- [x] **Phase 2: Single neuron.** Logistic regression on AND and OR, with
       gradient checking.
 - [ ] **Phase 3: XOR.** First network with a hidden layer.
 - [ ] **Phase 4: General layers.** A network of any depth.
