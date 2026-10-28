@@ -3,8 +3,12 @@
 #include "../src/matrix.h"
 #include "test_helpers.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 Counts test_matlib(void) {
+    const unsigned int SEED = 123123;
+    srand(SEED);
+
     int counter = 0;
     int fail_counter = 0;
     const float tolerance = 1e-5f;
@@ -237,6 +241,25 @@ Counts test_matlib(void) {
     mat_free(&sub_mat);
     // mat_free(&post_sub);
     mat_free(&expected_sub);
+
+    Matrix rand_mat = mat_init(10, 10);
+    const float a = 2.0f;
+    int pass = 1;
+    mat_rand_uniform(&rand_mat, a);
+    for(int i = 0; i < rand_mat.rows * rand_mat.cols; i++) {
+        if (!(rand_mat.mat[i] >= -1 * a && rand_mat.mat[i] <= a)) {
+            printf("FAIL random matrix init test: element at row %d, col %d is not within range [-%g, %g]\n", (i / rand_mat.cols), (i % rand_mat.cols), a, a);
+            pass = 0;
+            fail_counter++;
+            break;
+        }
+    }
+    mat_free(&rand_mat);
+    if (pass) {
+        printf("PASS random matrix init test\n");
+    }
+    counter++;
+    
 
     printf("%d tests, %d failed\n", counter, fail_counter);
 

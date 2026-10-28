@@ -130,6 +130,8 @@ void fill_mat_from_arr(Matrix *m, const float *arr, int count);
  */
 Matrix mat_from_arr(int rows, int cols, const float *arr, int count);
 
+void mat_rand_uniform(Matrix *m, float a);
+
 /*
  * Computes the matrix product C = A * B.
  *

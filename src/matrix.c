@@ -56,6 +56,15 @@ Matrix mat_from_arr(int rows, int cols, const float *arr, int count) {
     return matrix;
 }
 
+void mat_rand_uniform(Matrix *m, float a) {
+    assert(m != NULL);
+    assert(m->mat != NULL);
+    assert(a > 0);
+    for (int i = 0; i < m->rows * m->cols; i++) {
+        m->mat[i] = ((float) rand() / RAND_MAX) * 2 * a - a;
+    }
+}
+
 void mat_mult(Matrix *C, const Matrix *A, const Matrix *B) {
     assert(A != NULL && B != NULL && C != NULL);
     assert(A->mat != NULL && B->mat != NULL && C->mat != NULL);

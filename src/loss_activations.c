@@ -6,25 +6,11 @@
 
 const float BCE_EPS = 1e-7f;
 
-float ReLU(float x) {
-    if (x > 0.0f) {
-        return x;
-    } else {
-        return 0.0f;
-    }
-}
+float ReLU(float x) { return (x > 0 ? x : 0); }
 
-float ReLU_deriv(float x) {
-    if (x > 0.0f) {
-        return 1.0f;
-    } else {
-        return 0.0f;
-    }
-}
+float ReLU_deriv(float x) { return (x > 0 ? 1.0f : 0); }
 
-float sigmoid(float x) {
-    return 1.0f / (1.0f + expf(-x));
-}
+float sigmoid(float x) { return 1.0f / (1.0f + expf(-x)); }
 
 float sigmoid_deriv(float x) {
     float sig = sigmoid(x);

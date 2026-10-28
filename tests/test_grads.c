@@ -35,7 +35,7 @@ Counts test_grads(void) {
     // Backward Pass
     Matrix dW = mat_init(2, 1);
     Matrix dB = mat_init(1, 1);
-    backward_pass(&dW, &dB, &Input, &Probs, &Truth);
+    backward_pass(&dW, &dB, &Input, &Weights, &Probs, &Truth);
 
     // Calculate symmetric difference quotient for small h and compare to
     // backward_pass calculated gradients

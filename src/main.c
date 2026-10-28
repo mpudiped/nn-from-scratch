@@ -6,6 +6,9 @@
 #include <string.h>
 
 int main(void) {
+    const unsigned int SEED = 123123;
+    srand(SEED);
+
     const float fill_X[] = {0, 0, 0, 1, 1, 0, 1, 1};
     Matrix X = mat_from_arr(4, 2, fill_X, ARRAY_LEN(fill_X));
 
@@ -40,7 +43,7 @@ int main(void) {
     printf("Starting loss is %g\n", mean_bce(&Truth, &P));
     for (int i = 0; i < steps; i++) {
         forward_pass(&P, &X, &W, &b);
-        backward_pass(&dW, &db, &X, &P, &Truth);
+        backward_pass(&dW, &db, &X, &W, &P, &Truth);
         mat_scaled_subtract(&W, &W, &dW, learning_rate);
         mat_scaled_subtract(&b, &b, &db, learning_rate);
         if (i % 500 == 0 && i != 0) {
@@ -58,6 +61,6 @@ int main(void) {
     mat_free(&P);
     mat_free(&dW);
     mat_free(&db);
-
+    
     return 0;
 }
